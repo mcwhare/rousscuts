@@ -198,7 +198,7 @@ async function buildSlotsView(dateStr) {
 
 // ---------- full page ----------
 
-router.get('/calendar', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const now = new Date();
     const date = req.query.date || todayStr();
@@ -212,7 +212,7 @@ router.get('/calendar', async (req, res, next) => {
     const msg = req.session.msg;
     delete req.session.msg;
 
-    res.render('booking', {
+    res.render('index', {
       calendar,
       timezone: melbourneTimezoneAbbrev(),
       msg,
@@ -226,7 +226,7 @@ router.get('/calendar', async (req, res, next) => {
 // Old URL, kept working for anything that still links to it.
 router.get('/book', (req, res) => {
   const qs = new URLSearchParams(req.query).toString();
-  res.redirect(`/calendar${qs ? `?${qs}` : ''}`);
+  res.redirect(`/${qs ? `?${qs}` : ''}`);
 });
 
 // ---------- AJAX fragments (no full page reload) ----------
@@ -321,7 +321,7 @@ router.post('/book', async (req, res, next) => {
       await sendEmail(email, 'Booking Confirmed', customerBody);
     }
 
-    res.redirect(`/calendar?date=${encodeURIComponent(date)}`);
+    res.redirect(`/?date=${encodeURIComponent(date)}`);
   } catch (err) {
     next(err);
   }
