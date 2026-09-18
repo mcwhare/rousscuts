@@ -1,0 +1,168 @@
+/* Rousscuts — homepage */
+
+.hero {
+  padding: clamp(40px, 8vw, 90px) clamp(20px, 6vw, 56px) clamp(50px, 7vw, 80px);
+  max-width: 960px;
+}
+
+.hero h1 {
+  font-size: clamp(2.75rem, 7vw, 4.75rem);
+  letter-spacing: -0.01em;
+}
+
+.hero p.tagline {
+  margin-top: 18px;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 46ch;
+}
+
+.hero .hero-actions {
+  margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.hero .hero-actions .address {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.content {
+  max-width: 960px;
+  padding: 0 clamp(20px, 6vw, 56px) 100px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(30px, 5vw, 70px);
+  align-items: start;
+}
+
+/* price list, styled like a shop price board rather than pricing cards */
+.price-list h2 {
+  font-size: 1.6rem;
+  margin-bottom: 22px;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-row:first-of-type {
+  border-top: 1px solid var(--border);
+}
+
+.price-row .service {
+  font-size: 1.05rem;
+}
+
+.price-row .amount {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* aside: location + policy, marked with an accent stripe (barber-pole nod,
+   used once and quietly rather than as literal stripes) */
+.aside-block {
+  border-left: 3px solid var(--accent-secondary);
+  padding-left: 22px;
+}
+
+.aside-block h3 {
+  font-size: 1rem;
+  margin-top: 26px;
+  margin-bottom: 8px;
+}
+
+.aside-block h3:first-child {
+  margin-top: 0;
+}
+
+.aside-block p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* contact / instagram footer card */
+.contact-strip {
+  max-width: 960px;
+  margin: 0 clamp(20px, 6vw, 56px) 80px;
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--bg-alt);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.contact-strip img.pfp {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.contact-strip .who {
+  flex: 1;
+  min-width: 180px;
+}
+
+.contact-strip .who .name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.contact-strip .who .loc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.contact-strip a.insta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.contact-strip a.insta:hover {
+  border-color: var(--accent);
+}
+
+.contact-strip a.insta img {
+  width: 18px;
+  height: 18px;
+}
+
+footer.site-footer {
+  text-align: center;
+  padding: 30px 20px 50px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 760px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+  .aside-block {
+    order: -1;
+  }
+}

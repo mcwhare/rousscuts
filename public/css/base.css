@@ -1,0 +1,308 @@
+/* Rousscuts — shared base styles (site + admin) */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+}
+
+p {
+  color: var(--text);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- top bar / theme toggle (shared across every page) ---------- */
+
+.site-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(20px, 5vw, 56px);
+}
+
+.site-bar .wordmark {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.94);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.theme-toggle .icon-moon { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+/* Default (Light Mode) */
+.logo-light {
+    display: none;
+}
+.logo-dark {
+    display: inline-block;
+}
+
+/* Dark Mode */
+html[data-theme="dark"] .logo-light {
+    display: inline-block;
+}
+html[data-theme="dark"] .logo-dark {
+    display: none;
+}
+
+/* ---------- buttons (shared verb-first actions) ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  line-height: 1;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: var(--danger-contrast);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ---------- forms (used by every admin page) ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.field input,
+.field select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field-row .field {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.field-row .sep {
+  color: var(--text-muted);
+  padding-top: 22px;
+}
+
+/* ---------- generic surface / card ---------- */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.page-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+.eyebrow-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.msg-success {
+  background: color-mix(in srgb, var(--success) 14%, var(--surface));
+  border: 1px solid var(--success);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+}
+
+.msg-error {
+  background: color-mix(in srgb, var(--danger) 14%, var(--surface));
+  border: 1px solid var(--danger);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+}
+
+/* simple data table, used by view_bookings / edit_availability */
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+table.data-table caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  padding: 18px 20px 6px;
+  color: var(--text);
+}
+
+table.data-table th,
+table.data-table td {
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+table.data-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+table.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+table.data-table form {
+  display: inline-block;
+  margin-right: 6px;
+}

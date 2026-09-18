@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rousscuts — Mount Waverley</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/frontpage.css">
+    <link rel="icon" type="image/x-icon" href="/public/images/Rousscuts_logo.png">
+</head>
+<body>
+
+    <header class="site-bar">
+        <a href="/" class="wordmark">Rousscuts</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="icon-sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+    </header>
+
+    <section class="hero">
+        <h1>Haircuts in Mount Waverley.</h1>
+        <p class="tagline">Book a slot below, or check out my Instagram first if you're not sure what you want.</p>
+        <div class="hero-actions">
+            <a href="/calendar" class="btn btn-primary">Book an appointment</a>
+            <!-- <span class="address">5 Anthony Drive, Mount Waverley 3149</span> -->
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="price-list">
+            <h2>Services</h2>
+            <div class="price-row">
+                <span class="service">Haircut</span>
+                <span class="amount">$35</span>
+            </div>
+            <div class="price-row">
+                <span class="service">Eyebrows</span>
+                <span class="amount">$5</span>
+            </div>
+        </div>
+
+        <aside class="aside-block">
+            <h3>Location</h3>
+            <p>5 Anthony Drive, Mount Waverley 3149</p>
+
+            <h3>Cancellation policy</h3>
+            <p>
+                To cancel, message Jamie on Instagram (@rousscuts) or call 0411 504 768.
+                Cancelling with under 24 hours' notice incurs a $10 fee.
+                Not showing up without notice incurs a $20 fee.
+            </p>
+        </aside>
+    </section>
+
+    <div class="contact-strip">
+        <img src="/images/pfp.png" class="pfp" alt="Jamie Roussety">
+        <div class="who">
+            <div class="name">Jamie Roussety</div>
+            <div class="loc">Mount Waverley 3149</div>
+        </div>
+        <a href="https://www.instagram.com/rousscuts/" class="insta">
+            <img src="/images/instalogo-light.png" class="logo-light" alt="Instagram">
+            <img src="/images/instalogo-dark.png" class="logo-dark" alt="Instagram">
+            @rousscuts
+        </a>
+    </div>
+
+    <footer class="site-footer">
+        &copy; <span id="year"></span> Rousscuts
+    </footer>
+
+    <script src="/js/theme-toggle.js"></script>
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

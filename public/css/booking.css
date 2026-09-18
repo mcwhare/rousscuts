@@ -1,0 +1,346 @@
+/* Rousscuts — booking page (calendar + times + summary) */
+
+body {
+  background: var(--bg);
+}
+
+.booking-shell {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 30px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ---------- calendar ---------- */
+
+.calendar-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.calendar-head h2 {
+  flex: 1;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.cal-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.cal-nav:hover {
+  border-color: var(--accent);
+}
+
+.weekday-row,
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekday-row {
+  margin-bottom: 6px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding-bottom: 4px;
+}
+
+.day-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin: 3px auto;
+  border-radius: 50%;
+  font-size: 0.92rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.day-cell.empty {
+  visibility: hidden;
+}
+
+.day-cell.unavailable {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+.day-cell.bookable:hover {
+  background: var(--bg-alt);
+}
+
+.day-cell.bookable.today {
+  border: 1px solid var(--accent);
+}
+
+.day-cell.selected,
+.day-cell.selected.today {
+  background: var(--text);
+  color: var(--bg);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+#calendarGrid.collapsed .weekday-row,
+#calendarGrid.collapsed .week-row {
+  display: none;
+}
+
+.collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: 10px auto 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.collapse-toggle:hover {
+  color: var(--text);
+}
+
+.collapse-toggle.flipped {
+  transform: rotate(180deg);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 18px 0 14px;
+}
+
+.timezone-note {
+  text-align: center;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.timezone-note strong {
+  color: var(--text);
+}
+
+/* ---------- times panel ---------- */
+
+.times-panel h3 {
+  font-size: 1.35rem;
+  margin-bottom: 14px;
+}
+
+.no-availability {
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.btn-next-available {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: var(--text);
+  color: var(--bg);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-next-available:hover {
+  opacity: 0.9;
+}
+
+.time-section h4 {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 18px 0 10px;
+}
+
+.time-section:first-child h4 {
+  margin-top: 0;
+}
+
+.time-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+
+.time-pill:hover {
+  border-color: var(--accent);
+}
+
+.time-pill.booked {
+  opacity: 0.5;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  background: transparent;
+}
+
+/* ---------- modal (contact details) ---------- */
+
+.modalDialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 13, 10, 0.55);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalDialog:target {
+  display: flex;
+}
+
+.modalContent {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  position: relative;
+  text-align: left;
+}
+
+.modalText {
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 18px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close:hover {
+  background: var(--bg-alt);
+  color: var(--text);
+}
+
+.form-group {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group input,
+.form-group select {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+.submitBtn {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.alert-success,
+.alert-failure {
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.alert-success {
+  background: color-mix(in srgb, var(--success) 16%, var(--surface));
+  border: 1px solid var(--success);
+}
+
+.alert-failure {
+  background: color-mix(in srgb, var(--danger) 16%, var(--surface));
+  border: 1px solid var(--danger);
+}
+
+@media (max-width: 480px) {
+  .day-cell {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Edit availability' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell">
+        <h1>Edit availability</h1>
+        <div class="panel">
+            <form action="/edit" method="post">
+                <div class="field">
+                    <label for="bookingDate">Date</label>
+                    <input type="date" id="bookingDate" name="bookingDate" value="<%= date %>" readonly>
+                </div>
+                <div class="field">
+                    <label for="duration">Length of appointments (minutes)</label>
+                    <input type="text" id="duration" name="duration" value="60" required>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label for="timeStart">Available from</label>
+                        <input type="time" id="timeStart" name="timeStart" required>
+                    </div>
+                    <span class="sep">&ndash;</span>
+                    <div class="field">
+                        <label for="timeEnd">Until</label>
+                        <input type="time" id="timeEnd" name="timeEnd" required>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" name="submit" type="submit" id="submit">Save</button>
+            </form>
+        </div>
+        <a href="/edit-availability" class="back-link">Back</a>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

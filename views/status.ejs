@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Rousscuts — Admin' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+    <% if (redirectTo) { %><meta http-equiv="refresh" content="2;url=<%= redirectTo %>"><% } %>
+</head>
+<body>
+    <div class="admin-shell">
+        <div class="panel status-panel">
+            <p><%= message %></p>
+        </div>
+    </div>
+</body>
+</html>

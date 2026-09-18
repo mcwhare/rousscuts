@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Bookings' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell wide">
+        <h1>Bookings</h1>
+        <% if (rows.length === 0) { %>
+            <p style="color: var(--text-muted);">No bookings found.</p>
+        <% } else { %>
+            <table class="data-table">
+                <caption>All bookings</caption>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Date</th>
+                    <th>Timeslot</th>
+                    <th>Options</th>
+                </tr>
+                <% rows.forEach(function(row) { %>
+                    <tr>
+                        <td><%= row.id %></td>
+                        <td><%= row.name %></td>
+                        <td><%= row.email %></td>
+                        <td><%= row.mobile %></td>
+                        <td><%= row.date %></td>
+                        <td><%= row.timeslot %></td>
+                        <td>
+                            <div class="row-actions">
+                                <form action="/delete-booking" method="post">
+                                    <input type="hidden" name="id" value="<%= row.id %>">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } %>
+        <form action="/booking-settings" method="get">
+            <button class="btn btn-secondary" type="submit" style="margin-top: 20px;">Back to admin menu</button>
+        </form>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

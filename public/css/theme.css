@@ -1,0 +1,65 @@
+/*
+  Rousscuts — design tokens
+  Light theme is the default; [data-theme="dark"] on <html> overrides it.
+  Palette is drawn from the barber pole (navy / brick red) rather than a
+  generic SaaS accent, desaturated so it reads modern rather than kitsch.
+*/
+
+:root {
+  --bg: #faf7f1;
+  --bg-alt: #f1ead9;
+  --surface: #ffffff;
+  --text: #201c18;
+  --text-muted: #6b6459;
+  --border: #e3dacb;
+
+  --accent: #24406b;
+  --accent-contrast: #ffffff;
+  --accent-secondary: #a63d3f;
+  --accent-secondary-contrast: #ffffff;
+
+  --success: #3f7a54;
+  --success-contrast: #ffffff;
+  --danger: #a63d3f;
+  --danger-contrast: #ffffff;
+
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 2px 8px rgba(32, 28, 24, 0.06);
+  --shadow-md: 0 12px 28px rgba(32, 28, 24, 0.10);
+
+  --font-display: "Fraunces", "Iowan Old Style", "Georgia", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --bg: #15141a;
+  --bg-alt: #1d1b22;
+  --surface: #201e26;
+  --text: #f1ece2;
+  --text-muted: #a9a29a;
+  --border: #322f38;
+
+  --accent: #8aa6d6;
+  --accent-contrast: #12141c;
+  --accent-secondary: #de8286;
+  --accent-secondary-contrast: #241417;
+
+  --success: #6fbf87;
+  --success-contrast: #0f1a12;
+  --danger: #de8286;
+  --danger-contrast: #241417;
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 16px 36px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+/*
+  No prefers-color-scheme override here on purpose: light is the fixed
+  default per brief. theme-toggle.js applies data-theme="dark" only when
+  the visitor explicitly switches, and remembers that choice.
+*/

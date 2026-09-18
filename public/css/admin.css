@@ -1,0 +1,84 @@
+/* Rousscuts — admin pages */
+
+body {
+  background: var(--bg);
+}
+
+.admin-shell {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+.admin-shell h1 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+}
+
+.admin-shell.wide {
+  max-width: 860px;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-actions form {
+  margin: 0;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.row-actions form {
+  margin: 0;
+}
+
+.row-actions button {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.row-actions button:hover {
+  border-color: var(--accent);
+}
+
+.row-actions form[action="delete.php"] button,
+.row-actions form[action="delete_booking.php"] button {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.row-actions form[action="delete.php"] button:hover,
+.row-actions form[action="delete_booking.php"] button:hover {
+  background: var(--danger);
+  color: var(--danger-contrast);
+}
+
+.status-panel {
+  text-align: center;
+  padding: 60px 20px;
+}

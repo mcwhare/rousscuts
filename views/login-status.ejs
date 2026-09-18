@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Rousscuts — Admin' }) %>
+    <link rel="stylesheet" href="/css/style1.css">
+    <% if (redirectTo) { %><meta http-equiv="refresh" content="2;url=<%= redirectTo %>"><% } %>
+</head>
+<body>
+    <div class="login-shell">
+        <span class="wordmark" style="font-family: var(--font-display); font-weight:600; display:block; text-align:center; margin-bottom:26px;">Rousscuts</span>
+        <div class="panel status-panel">
+            <h2><%= heading %></h2>
+            <p style="color: var(--text-muted); margin-top: 10px;"><%= sub %></p>
+        </div>
+    </div>
+</body>
+</html>

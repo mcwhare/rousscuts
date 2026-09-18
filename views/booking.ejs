@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Book' }) %>
+    <link rel="stylesheet" href="/css/booking.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+
+    <div class="booking-shell">
+        <div class="calendar-card">
+            <div class="calendar-head">
+                <button type="button" id="prevMonthBtn" class="cal-nav" data-month="<%= calendar.prevMonth %>" data-year="<%= calendar.prevYear %>" aria-label="Previous month">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <h2 id="calendarMonthLabel"><%= calendar.monthName %> <%= calendar.year %></h2>
+                <button type="button" id="nextMonthBtn" class="cal-nav" data-month="<%= calendar.nextMonth %>" data-year="<%= calendar.nextYear %>" aria-label="Next month">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <div id="calendarGrid" data-month="<%= calendar.month %>" data-year="<%= calendar.year %>" data-selected-date="<%= date %>">
+                <%- include('partials/calendar-grid-inner', { calendar: calendar }) %>
+            </div>
+
+            <button type="button" id="collapseToggle" class="collapse-toggle" aria-label="Collapse calendar">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+            </button>
+
+            <hr class="divider">
+            <p class="timezone-note">Times are shown in <strong><%= timezone %></strong>.</p>
+        </div>
+
+        <div class="times-panel" id="timesPanel">
+            <%- include('partials/slots-section-inner', {
+                dateLabel: dateLabel, isToday: isToday, msg: msg, hasOpenSlot: hasOpenSlot,
+                slots: slots, nextAvailable: nextAvailable, nextAvailableLabel: nextAvailableLabel,
+                nextAvailableMonth: nextAvailableMonth, nextAvailableYear: nextAvailableYear
+            }) %>
+        </div>
+    </div>
+
+    <!-- contact details, collected once a time is picked -->
+    <div id="openModal" class="modalDialog">
+        <div class="modalContent">
+            <a href="#close" title="Close" class="close">X</a>
+            <form id="bookingForm" action="/book?date=<%= date %>" method="post" onsubmit="return validateForm();">
+                <p class="modalText" id="modalSelectedTime" style="margin-bottom: 14px; font-size: 0.95rem;"></p>
+                <input type="hidden" name="timeslot" id="timeslot">
+                <div class="form-group">
+                    <label for="type" class="modalText">Type:</label>
+                    <select id="type" name="type" required>
+                        <option value="hair">Haircut</option>
+                        <option value="eyebrows">Eyebrows</option>
+                        <option value="hair and eyebrows">Both Hair and Eyebrows</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="modalText">Name:</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="modalText">Email:</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile" class="modalText">Mobile Number:</label>
+                    <input type="text" name="mobile" id="mobile" required>
+                </div>
+                <div class="submit">
+                    <input name="submit" type="submit" id="submit" class="submitBtn" value="Book">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include('partials/scripts') %>
+    <script src="/js/booking.js"></script>
+</body>
+</html>

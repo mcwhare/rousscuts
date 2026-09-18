@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Add availability' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell">
+        <h1>Adjust booking times</h1>
+        <% if (msg) { %>
+            <div class="<%= msg.startsWith('ERROR') ? 'msg-error' : 'msg-success' %>"><%= msg %></div>
+        <% } %>
+        <div class="panel">
+            <form action="/add-availability" method="post">
+                <div class="field">
+                    <label for="bookingDate">Date</label>
+                    <input type="date" id="bookingDate" name="bookingDate" required>
+                </div>
+                <div class="field">
+                    <label for="duration">Length of appointments (minutes)</label>
+                    <input type="text" id="duration" name="duration" value="60" required>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label for="timeStart">Available from</label>
+                        <input type="time" id="timeStart" name="timeStart" required>
+                    </div>
+                    <span class="sep">&ndash;</span>
+                    <div class="field">
+                        <label for="timeEnd">Until</label>
+                        <input type="time" id="timeEnd" name="timeEnd" required>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" name="submit" type="submit" id="submit">Save</button>
+            </form>
+        </div>
+        <a href="/" class="back-link">Back to home</a>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

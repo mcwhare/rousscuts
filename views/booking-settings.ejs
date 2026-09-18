@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Admin' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell">
+        <h1>Admin settings</h1>
+        <div class="dashboard-actions">
+            <form action="/add-availability" method="get">
+                <button class="btn btn-primary btn-block" type="submit">Add available time</button>
+            </form>
+            <form action="/edit-availability" method="get">
+                <button class="btn btn-secondary btn-block" type="submit">Edit available times</button>
+            </form>
+            <form action="/view-bookings" method="get">
+                <button class="btn btn-secondary btn-block" type="submit">View all bookings</button>
+            </form>
+            <form action="/logout" method="post">
+                <button class="btn btn-secondary btn-block" type="submit">Log out</button>
+            </form>
+        </div>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

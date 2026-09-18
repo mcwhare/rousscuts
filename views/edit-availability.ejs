@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Edit availability' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell wide">
+        <h1>Edit availability</h1>
+        <table class="data-table">
+            <caption>Available times</caption>
+            <tr>
+                <th>Date</th>
+                <th>Time available</th>
+                <th>Duration</th>
+                <th>Options</th>
+            </tr>
+            <% if (rows.length === 0) { %>
+                <tr><td colspan="4" style="color: var(--text-muted);">No availability set yet.</td></tr>
+            <% } %>
+            <% rows.forEach(function(row) { %>
+                <tr>
+                    <td><%= row.date %></td>
+                    <td><%= row.duration %> min</td>
+                    <td><%= row.timeStart %> - <%= row.timeEnd %></td>
+                    <td>
+                        <div class="row-actions">
+                            <form action="/edit" method="get">
+                                <input type="hidden" name="date" value="<%= row.date %>">
+                                <button type="submit">Edit</button>
+                            </form>
+                            <form action="/delete-availability" method="post">
+                                <input type="hidden" name="date" value="<%= row.date %>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+        </table>
+        <form action="/booking-settings" method="get">
+            <button class="btn btn-secondary" type="submit" style="margin-top: 20px;">Back to admin menu</button>
+        </form>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

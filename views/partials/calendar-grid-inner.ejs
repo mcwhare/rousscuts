@@ -1,0 +1,20 @@
+<div class="weekday-row">
+    <% calendar.dayLetters.forEach(function(letter) { %>
+        <span class="weekday"><%= letter %></span>
+    <% }) %>
+</div>
+<% calendar.weeks.forEach(function(week) { %>
+    <div class="week-row">
+        <% week.forEach(function(cell) { %>
+            <% if (cell.empty) { %>
+                <span class="day-cell empty"></span>
+            <% } else if (cell.bookable) { %>
+                <a href="/calendar?date=<%= cell.dateStr %>" class="day-cell bookable<%= cell.isSelected ? ' selected' : '' %><%= cell.isToday ? ' today' : '' %>" data-date="<%= cell.dateStr %>">
+                    <%= cell.day %>
+                </a>
+            <% } else { %>
+                <span class="day-cell unavailable<%= cell.isToday ? ' today' : '' %>"><%= cell.day %></span>
+            <% } %>
+        <% }) %>
+    </div>
+<% }) %>
