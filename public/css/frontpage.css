@@ -1,7 +1,7 @@
 /* Rousscuts — homepage */
 
 .hero {
-  padding: clamp(40px, 8vw, 90px) clamp(20px, 6vw, 56px) clamp(50px, 7vw, 80px);
+  padding: clamp(40px, 8vw, 90px) clamp(20px, 6vw, 56px) clamp(50px, 7vw, 60px);
   max-width: 960px;
 }
 
@@ -32,7 +32,7 @@
 
 .content {
   max-width: 960px;
-  padding: 0 clamp(20px, 6vw, 56px) 100px;
+  padding: 0 clamp(20px, 6vw, 56px) 20px;
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: clamp(30px, 5vw, 70px);
@@ -95,7 +95,7 @@
 /* contact / instagram footer card */
 .contact-strip {
   max-width: 960px;
-  margin: 0 clamp(20px, 6vw, 56px) 80px;
+  margin: 80px clamp(20px, 6vw, 56px) 80px;
   padding: clamp(24px, 4vw, 40px);
   background: var(--bg-alt);
   border-radius: var(--radius-lg);
@@ -165,4 +165,43 @@ footer.site-footer {
   .aside-block {
     order: -1;
   }
+}
+
+#reviewModal {
+    display: none;
+    /* copy the same fixed positioning, background, and z-index properties as your #openModal class here */
+}
+
+#reviewModal:target {
+    display: block;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 40px;
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 40px 20px;
+    align-items: start; /* Prevents columns from stretching to match heights */
+}
+
+/* On smaller screens (tablets/phones), stack the content on top of the calendar */
+@media (max-width: 800px) {
+    .home-layout {
+        grid-template-columns: 1fr; /* One column */
+    }
+}
+
+/* Hide the Book Now scroll button on desktop layouts */
+.btn-mobile-book {
+    display: none;
+}
+
+/* Show the button only on mobile/tablet (adjust 800px if your layout breaks at a different width) */
+@media (max-width: 800px) {
+    .btn-mobile-book {
+        display: inline-flex;
+        margin-top: 12px;
+    }
 }

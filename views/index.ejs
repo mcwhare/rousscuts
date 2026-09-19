@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rousscuts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/frontpage.css">
+    <link rel="stylesheet" href="/css/booking.css">
+    <link rel="icon" type="image/x-icon" href="/images/Rousscuts_logo.png">
+</head>
+<body>
+
+    <header class="site-bar">
+        <a href="/" class="wordmark">Rousscuts</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="icon-sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+    </header>
+
+    <!-- Two-column grid wrapper -->
+    <div class="home-layout">
+        
+        <!-- LEFT COLUMN: Static Site Info -->
+        <div class="home-content">
+            <section class="hero" style="padding-top: 0;">
+                <h1>Premium Haircuts, in Mount Waverley.</h1>
+                <p class="tagline">Book a slot below to discuss your next hairstyle. If you're not sure what you want, DM Jamie or have a look at the styles on his instagram.</p>
+                <div class="hero-actions">
+                    <!-- NEW: Mobile-only scroll button -->
+                    <a href="#calendarGrid" class="btn btn-primary btn-mobile-book">Book Now</a>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="price-list">
+                    <h2>Services</h2>
+                    <div class="price-row">
+                        <span class="service">Haircut</span>
+                        <span class="amount">$35</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="service">Eyebrows</span>
+                        <span class="amount">$5</span>
+                    </div>
+                </div>
+
+                <aside class="aside-block">
+                    <h3>Location</h3>
+                    <p>5 Anthony Drive, Mount Waverley 3149</p>
+
+                    <h3>Cancellation policy</h3>
+                    <p>
+                        To cancel, message Jamie on Instagram (@rousscuts) or call 0411 504 768.
+                        Cancelling with under 24 hours' notice incurs a $10 fee.
+                        Not showing up without notice incurs a $20 fee.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- NEW: Dynamic Reviews Section -->
+            <div class="panel" style="margin-top: 24px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-size: 1.15rem; font-family: var(--font-body);">Reviews</h2>
+                    <div style="display: flex; align-items: center; gap: 6px; font-weight: 600;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#966a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <%= avgRating %> <span style="color: var(--text-muted); font-weight: 400;">(<%= totalReviews %>)</span>
+                    </div>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+                
+                <div class="reviews-list" style="max-height: 300px; overflow-y: auto;">
+                    <% if (reviews.length === 0) { %>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">No reviews yet.</p>
+                    <% } else { %>
+                        <% reviews.forEach(function(review) { %>
+                            <div class="review-single" style="margin-bottom: 16px;">
+                                <div style="display: flex; gap: 2px; margin-bottom: 4px;">
+                                    <% for(let i=0; i<5; i++) { %>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="<%= i < review.rating ? '#966a00' : 'none' %>" stroke="#966a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                    <% } %>
+                                </div>
+                                <p style="margin: 0 0 4px 0; font-size: 0.95rem;"><%= review.review_text %></p>
+                                <p style="margin: 0; color: var(--text-muted); font-size: 0.85rem;"><%= review.name %></p>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+
+                <a href="#reviewModal" class="btn btn-secondary btn-block" style="margin-top: 20px; text-decoration: none;">Leave a review</a>
+            </div>
+            <br>
+            
+        </div>
+
+        <!-- RIGHT COLUMN: Dynamic Booking Area -->
+<div class="home-calendar">
+    
+    <!-- Render success/error banners -->
+    <% if (typeof msg !== 'undefined' && msg) { %>
+        <div class="msg-<%= msg.type === 'error' ? 'error' : 'success' %>">
+            <%= msg.text %>
+        </div>
+    <% } %>
+
+    <div class="panel">
+        
+        <!-- ADD THIS BLOCK: The calendar navigation header -->
+        <div class="calendar-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <button type="button" id="prevMonthBtn" class="cal-nav" data-month="<%= calendar.prevMonth %>" data-year="<%= calendar.prevYear %>" aria-label="Previous month" style="background: none; border: none; cursor: pointer; color: var(--text);">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <h2 id="calendarMonthLabel" style="margin: 0; font-size: 1.2rem;"><%= calendar.monthName %> <%= calendar.year %></h2>
+            <button type="button" id="nextMonthBtn" class="cal-nav" data-month="<%= calendar.nextMonth %>" data-year="<%= calendar.nextYear %>" aria-label="Next month" style="background: none; border: none; cursor: pointer; color: var(--text);">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+        <!-- END OF ADDED BLOCK -->
+
+        <!-- Your existing calendarGrid stays here -->
+        <div id="calendarGrid" class="calendar-wrapper" data-month="<%= calendar.month %>" data-year="<%= calendar.year %>" data-selected-date="<%= date %>">
+            <%- include('partials/calendar-grid-inner') %>
+        </div>
+        
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+
+        <!-- Restored id="timesPanel" -->
+        <div id="timesPanel">
+            <%- include('partials/slots-section-inner') %>
+        </div>
+    </div>
+    <div class="contact-strip">
+                <img src="/images/pfp.png" class="pfp" alt="Jamie Roussety">
+                <div class="who">
+                    <div class="name">Jamie Roussety</div>
+                    <div class="loc">Mount Waverley 3149</div>
+                </div>
+                <a href="https://www.instagram.com/rousscuts/" class="insta">
+                    <img src="/images/instalogo-light.png" class="logo-light" alt="Instagram">
+                    <img src="/images/instalogo-dark.png" class="logo-dark" alt="Instagram">
+                    @rousscuts
+                </a>
+            </div>
+</div>
+
+    </div>
+
+    <!-- contact details, collected once a time is picked -->
+    <div id="openModal" class="modalDialog">
+        <div class="modalContent">
+            <a href="#close" title="Close" class="close">X</a>
+            <form id="bookingForm" action="/book?date=<%= date %>" method="post" onsubmit="return validateForm();">
+                <p class="modalText" id="modalSelectedTime" style="margin-bottom: 14px; font-size: 0.95rem;"></p>
+                <input type="hidden" name="timeslot" id="timeslot">
+                <div class="form-group">
+                    <label for="type" class="modalText">Type:</label>
+                    <select id="type" name="type" required>
+                        <option value="hair">Haircut</option>
+                        <option value="eyebrows">Eyebrows</option>
+                        <option value="hair and eyebrows">Both Hair and Eyebrows</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="modalText">Name:</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="modalText">Email:</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile" class="modalText">Mobile Number:</label>
+                    <input type="text" name="mobile" id="mobile" required>
+                </div>
+                <div class="submit">
+                    <input name="submit" type="submit" id="submit" class="submitBtn" value="Book">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modalDialog">
+        <div class="modalContent">
+            <a href="#close" title="Close" class="close">&times;</a>
+            <h2 style="margin-bottom: 16px;">Leave a Review</h2>
+            
+            <form action="/review" method="POST">
+                <div class="field">
+                    <label for="reviewName">Your Name</label>
+                    <input type="text" id="reviewName" name="name" required>
+                </div>
+                
+                <div class="field">
+                    <label for="rating">Rating</label>
+                    <select id="rating" name="rating" required>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="review_text">Review</label>
+                    <textarea id="review_text" name="review_text" rows="4" required style="width: 100%; padding: 11px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: var(--font-body);"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 16px;">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        &copy; <span id="year"></span> Rousscuts
+    </footer>
+
+    <script src="/js/theme-toggle.js"></script>
+    <!-- Loads the frontend AJAX script for calendar interactions -->
+    <script src="/js/booking.js"></script>
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

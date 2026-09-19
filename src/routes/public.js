@@ -198,7 +198,7 @@ async function buildSlotsView(dateStr) {
 
 // ---------- full page ----------
 
-router.get('/calendar', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const now = new Date();
     const date = req.query.date || todayStr();
@@ -209,13 +209,26 @@ router.get('/calendar', async (req, res, next) => {
     const calendar = buildCalendarGrid(month, year, date, bookableDates);
     const slotsView = await buildSlotsView(date);
 
-    const msg = req.session.msg;
-    delete req.session.msg;
+    // Fetch reviews from the database
+    const [reviews] = await pool.query('SELECT * FROM reviews WHERE approved = 1 ORDER BY created_at DESC');
+    const totalReviews = reviews.length;
+    const avgRating = totalReviews > 0 
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1) 
+        : '0.0';
 
-    res.render('booking', {
+    const msg = req.session.msg;
+    const reviewMsg = req.session.reviewMsg;
+    delete req.session.msg;
+    delete req.session.reviewMsg;
+
+    res.render('index', {
       calendar,
       timezone: melbourneTimezoneAbbrev(),
       msg,
+      reviewMsg,
+      reviews,       // This sends the reviews array to EJS
+      totalReviews,  // This sends the total count
+      avgRating,     // This sends the average rating
       ...slotsView,
     });
   } catch (err) {
@@ -224,9 +237,9 @@ router.get('/calendar', async (req, res, next) => {
 });
 
 // Old URL, kept working for anything that still links to it.
-router.get('/book', (req, res) => {
+router.get('/1k', (req, res) => {
   const qs = new URLSearchParams(req.query).toString();
-  res.redirect(`/calendar${qs ? `?${qs}` : ''}`);
+  res.redirect(`/${qs ? `?${qs}` : ''}`);
 });
 
 // ---------- AJAX fragments (no full page reload) ----------
@@ -277,6 +290,26 @@ router.get('/partials/slots', async (req, res, next) => {
   }
 });
 
+// ---------- reviews ----------
+
+router.post('/review', async (req, res, next) => {
+  try {
+    const { name, rating, review_text } = req.body;
+    
+    await pool.query(
+      'INSERT INTO reviews (name, rating, review_text) VALUES (?, ?, ?)',
+      [name, parseInt(rating, 10), review_text]
+    );
+
+    req.session.reviewMsg = { type: 'success', text: 'Thank you for your review!' };
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    req.session.reviewMsg = { type: 'error', text: 'Failed to submit review.' };
+    res.redirect('/');
+  }
+});
+
 // ---------- booking submission ----------
 
 router.post('/book', async (req, res, next) => {
@@ -284,44 +317,63 @@ router.post('/book', async (req, res, next) => {
     const { date } = req.query;
     const { name, email, mobile, timeslot, type } = req.body;
 
-    const [existing] = await pool.query(
-      'SELECT id FROM bookings WHERE date = ? AND timeslot = ?',
-      [date, timeslot],
-    );
+    let isConflict = false;
+    
+    // Skip the double-booking check if they are joining the queue
+    if (!timeslot.startsWith('Queue')) {
+      const [existing] = await pool.query(
+        'SELECT id FROM bookings WHERE date = ? AND timeslot = ?',
+        [date, timeslot],
+      );
+      if (existing.length > 0) isConflict = true;
+    }
 
-    if (existing.length > 0) {
+    if (isConflict) {
       req.session.msg = { type: 'error', text: 'Already booked' };
     } else {
+      // Insert the booking (the timeslot will literally be saved as "Queue")
       await pool.query(
         'INSERT INTO bookings (name, email, mobile, date, timeslot) VALUES (?, ?, ?, ?, ?)',
         [name, email, mobile, date, timeslot],
       );
-      req.session.msg = { type: 'success', text: 'Booking Successful' };
+      
+      if (timeslot.startsWith('Queue')) {
+        req.session.msg = { type: 'success', text: 'You have been added to the waitlist!' };
 
-      const ownerBody = `A booking has been made under: <br><br>
-        Name: ${name}<br>
-        Mobile: ${mobile}<br>
-        Email: ${email}<br>
-        Type of cut: ${type}<br><br>
-        For the following time: <br>
-        ${date}<br>
-        ${timeslot}`;
-      await sendEmail(process.env.OWNER_EMAIL, 'Booking made', ownerBody);
+        const ownerBody = `A customer has joined the waitlist:<br><br>
+          Name: ${name}<br>Mobile: ${mobile}<br>Email: ${email}<br>Type: ${type}<br><br>
+          Date: ${date}`;
+        await sendEmail(process.env.OWNER_EMAIL, 'New Waitlist Entry', ownerBody);
 
-      const customerBody = `Dear ${name}<br>
-        A booking has been made for ${timeslot}, ${date}<br><br>
-        Here are the details you need: <br>
-        Address: 5 Anthony Drive Mount Waverley 3149 <br><br>
-        Cancellation Policy: <br>
-        To cancel bookings, contact Jamie at 0411504768 or contact through instagram, IG: @rousscuts.
-        Appointments cancelled in under 24 hour notice will incur a $10 fee.
-        Failure to show up without notice will incur a $20 fee.<br><br>
-        Please let me know if you have any questions.<br><br>
-        See you then!`;
-      await sendEmail(email, 'Booking Confirmed', customerBody);
+        const customerBody = `Hi ${name},<br><br>
+          You've been added to the waitlist for ${date}.<br>
+          If a spot opens up, Jamie will contact you at ${mobile}.<br><br>
+          Thanks!`;
+        await sendEmail(email, 'Waitlist Confirmation', customerBody);
+
+      } else {
+        req.session.msg = { type: 'success', text: 'Booking Successful' };
+
+        const ownerBody = `A booking has been made under: <br><br>
+          Name: ${name}<br>Mobile: ${mobile}<br>Email: ${email}<br>Type of cut: ${type}<br><br>
+          For the following time: <br>${date}<br>${timeslot}`;
+        await sendEmail(process.env.OWNER_EMAIL, 'Booking made', ownerBody);
+
+        const customerBody = `Dear ${name}<br>
+          A booking has been made for ${timeslot}, ${date}<br><br>
+          Here are the details you need: <br>
+          Address: 5 Anthony Drive Mount Waverley 3149 <br><br>
+          Cancellation Policy: <br>
+          To cancel bookings, contact Jamie at 0411504768 or contact through instagram, IG: @rousscuts.
+          Appointments cancelled in under 24 hour notice will incur a $10 fee.
+          Failure to show up without notice will incur a $20 fee.<br><br>
+          Please let me know if you have any questions.<br><br>
+          See you then!`;
+        await sendEmail(email, 'Booking Confirmed', customerBody);
+      }
     }
 
-    res.redirect(`/calendar?date=${encodeURIComponent(date)}`);
+    res.redirect(`/?date=${encodeURIComponent(date)}`);
   } catch (err) {
     next(err);
   }
