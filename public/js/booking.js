@@ -107,12 +107,23 @@
 
   // Timeslot pick -> prefill and open the modal (delegated, fragment gets replaced)
   timesPanel.addEventListener('click', function (e) {
-    var pill = e.target.closest('.time-pill:not(.booked)');
+    var pill = e.target.closest('.time-pill');
     if (!pill) return;
+
     var timeslot = pill.getAttribute('data-timeslot');
     var label = pill.getAttribute('data-label');
+
+    // If the slot is booked, turn this into a queue request
+    if (pill.classList.contains('booked')) {
+        timeslot = 'Queue ' + timeslot;
+        label = 'Waitlist for ' + label;
+    }
+
     document.getElementById('timeslot').value = timeslot;
     document.getElementById('modalSelectedTime').textContent = label;
+    
+    // Force the modal to open in case the booked pill isn't a standard link
+    window.location.hash = '#openModal';
   });
 
   if (collapseToggle) {

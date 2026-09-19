@@ -32,7 +32,7 @@
 
 .content {
   max-width: 960px;
-  padding: 0 clamp(20px, 6vw, 56px) 100px;
+  padding: 0 clamp(20px, 6vw, 56px) 20px;
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: clamp(30px, 5vw, 70px);
@@ -95,7 +95,7 @@
 /* contact / instagram footer card */
 .contact-strip {
   max-width: 960px;
-  margin: 0 clamp(20px, 6vw, 56px) 80px;
+  margin: 80px clamp(20px, 6vw, 56px) 80px;
   padding: clamp(24px, 4vw, 40px);
   background: var(--bg-alt);
   border-radius: var(--radius-lg);
@@ -165,6 +165,15 @@ footer.site-footer {
   .aside-block {
     order: -1;
   }
+}
+
+#reviewModal {
+    display: none;
+    /* copy the same fixed positioning, background, and z-index properties as your #openModal class here */
+}
+
+#reviewModal:target {
+    display: block;
 }
 
 .home-layout {
