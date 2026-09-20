@@ -190,6 +190,7 @@ footer.site-footer {
 @media (max-width: 800px) {
     .home-layout {
         grid-template-columns: 1fr; /* One column */
+        max-width: 90%;
     }
 }
 

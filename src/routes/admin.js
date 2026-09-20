@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const requireAuth = require('../middleware/requireAuth');
+const { sendEmail } = require('../mailer');
 
 function timeToInt(t) {
   return parseInt(String(t).replace(/:/g, ''), 10);
@@ -143,6 +144,35 @@ router.post('/delete-booking', requireAuth, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+router.post('/confirm-booking', async (req, res, next) => {
+    try {
+        const { id, timeslot, email, name, date } = req.body;
+        
+        // 1. Remove "Queue " from the timeslot in the database
+        await pool.query(
+            'UPDATE bookings SET timeslot = ? WHERE id = ?',
+            [timeslot, id]
+        );
+        
+        // 2. Send the confirmation email to the customer
+        const customerBody = `Hi ${name},<br><br>
+            Great news! A spot has opened up and your waitlist request for <strong>${date} at ${timeslot}</strong> has been confirmed.<br><br>
+            Here are the details you need:<br>
+            Address: 5 Anthony Drive, Mount Waverley 3149<br><br>
+            Cancellation Policy:<br>
+            To cancel bookings, contact Jamie at 0411 504 768 or contact through Instagram, IG: @rousscuts.<br>
+            Appointments cancelled with under 24 hours' notice will incur a $10 fee.<br>
+            Failure to show up without notice will incur a $20 fee.<br><br>
+            See you then!`;
+            
+        await sendEmail(email, 'Waitlist Confirmed - Rousscuts', customerBody);
+
+        res.redirect('/view-bookings');
+    } catch (err) {
+        next(err);
+    }
 });
 
 module.exports = router;

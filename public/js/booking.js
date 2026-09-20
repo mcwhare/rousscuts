@@ -55,12 +55,12 @@
     var work = needsCalendarReload
       ? loadCalendar(month, year, dateStr)
       : Promise.resolve().then(function () {
-          calendarGrid.querySelectorAll('.day-cell.selected').forEach(function (el) {
-            el.classList.remove('selected');
-          });
-          var target = calendarGrid.querySelector('[data-date="' + dateStr + '"]');
-          if (target) target.classList.add('selected');
+        calendarGrid.querySelectorAll('.day-cell.selected').forEach(function (el) {
+          el.classList.remove('selected');
         });
+        var target = calendarGrid.querySelector('[data-date="' + dateStr + '"]');
+        if (target) target.classList.add('selected');
+      });
 
     work.then(function () { return loadSlots(dateStr); })
       .then(function () {
@@ -112,16 +112,25 @@
 
     var timeslot = pill.getAttribute('data-timeslot');
     var label = pill.getAttribute('data-label');
+    var submitBtn = document.querySelector('#bookingForm .submitBtn');
 
-    // If the slot is booked, turn this into a queue request
-    if (pill.classList.contains('booked')) {
+    // If the slot is booked OR it is the "fully booked day" Queue button
+    if (pill.classList.contains('booked') || timeslot.startsWith('Queue')) {
+      // Only append 'Queue ' if it's a specific time button that doesn't have it yet
+      if (pill.classList.contains('booked')) {
         timeslot = 'Queue ' + timeslot;
         label = 'Waitlist for ' + label;
+      }
+      // Change the modal button text
+      if (submitBtn) submitBtn.value = 'Join Queue';
+    } else {
+      // Reset the modal button text for normal bookings
+      if (submitBtn) submitBtn.value = 'Book';
     }
 
     document.getElementById('timeslot').value = timeslot;
     document.getElementById('modalSelectedTime').textContent = label;
-    
+
     // Force the modal to open in case the booked pill isn't a standard link
     window.location.hash = '#openModal';
   });

@@ -1,23 +1,30 @@
-(function () {
-  // Light is the default theme. We only ever set data-theme="dark" when the
-  // visitor explicitly asked for it, and we remember that choice.
-  var stored = localStorage.getItem("rousscuts-theme");
-  if (stored === "dark") {
-    document.documentElement.setAttribute("data-theme", "dark");
-  }
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    
+    // 1. Check local storage first (did they manually click the button before?)
+    const savedTheme = localStorage.getItem('theme');
+    
+    // 2. Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  document.addEventListener("DOMContentLoaded", function () {
-    var btn = document.getElementById("theme-toggle");
-    if (!btn) return;
-    btn.addEventListener("click", function () {
-      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      if (isDark) {
-        document.documentElement.removeAttribute("data-theme");
-        localStorage.setItem("rousscuts-theme", "light");
-      } else {
-        document.documentElement.setAttribute("data-theme", "dark");
-        localStorage.setItem("rousscuts-theme", "dark");
-      }
-    });
-  });
-})();
+    // Apply the correct theme on load
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        htmlElement.setAttribute('data-theme', 'dark');
+    } else {
+        htmlElement.removeAttribute('data-theme');
+    }
+
+    // Handle button clicks
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            if (htmlElement.getAttribute('data-theme') === 'dark') {
+                htmlElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
+});

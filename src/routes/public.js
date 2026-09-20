@@ -110,8 +110,10 @@ async function getMonthAvailability(month, year) {
   const bookableDates = new Set();
   settingsRows.forEach((settings) => {
     const rawSlots = timeslots(settings.duration, 0, settings.timeStart, settings.timeEnd, settings.date);
-    const bookedSet = bookedByDate.get(settings.date) || new Set();
-    if (rawSlots.some((s) => !bookedSet.has(s))) bookableDates.add(settings.date);
+
+    // CHANGE HERE: If there are ANY slots generated for the day, make it clickable, 
+    // regardless of whether they are booked or not.
+    if (rawSlots.length > 0) bookableDates.add(settings.date);
   });
 
   return bookableDates;
@@ -212,9 +214,9 @@ router.get('/', async (req, res, next) => {
     // Fetch reviews from the database
     const [reviews] = await pool.query('SELECT * FROM reviews WHERE approved = 1 ORDER BY created_at DESC');
     const totalReviews = reviews.length;
-    const avgRating = totalReviews > 0 
-        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1) 
-        : '0.0';
+    const avgRating = totalReviews > 0
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1)
+      : '0.0';
 
     const msg = req.session.msg;
     const reviewMsg = req.session.reviewMsg;
@@ -295,7 +297,7 @@ router.get('/partials/slots', async (req, res, next) => {
 router.post('/review', async (req, res, next) => {
   try {
     const { name, rating, review_text } = req.body;
-    
+
     await pool.query(
       'INSERT INTO reviews (name, rating, review_text) VALUES (?, ?, ?)',
       [name, parseInt(rating, 10), review_text]
@@ -318,7 +320,7 @@ router.post('/book', async (req, res, next) => {
     const { name, email, mobile, timeslot, type } = req.body;
 
     let isConflict = false;
-    
+
     // Skip the double-booking check if they are joining the queue
     if (!timeslot.startsWith('Queue')) {
       const [existing] = await pool.query(
@@ -336,13 +338,13 @@ router.post('/book', async (req, res, next) => {
         'INSERT INTO bookings (name, email, mobile, date, timeslot) VALUES (?, ?, ?, ?, ?)',
         [name, email, mobile, date, timeslot],
       );
-      
+
       if (timeslot.startsWith('Queue')) {
         req.session.msg = { type: 'success', text: 'You have been added to the waitlist!' };
 
         const ownerBody = `A customer has joined the waitlist:<br><br>
           Name: ${name}<br>Mobile: ${mobile}<br>Email: ${email}<br>Type: ${type}<br><br>
-          Date: ${date}`;
+          Date: ${date}<br>Slot: ${timeslot}`;
         await sendEmail(process.env.OWNER_EMAIL, 'New Waitlist Entry', ownerBody);
 
         const customerBody = `Hi ${name},<br><br>

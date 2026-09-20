@@ -6,21 +6,24 @@
     <div class="alert-failure"><%= msg.text %></div>
 <% } %>
 
-<% if (!hasOpenSlot) { %>
+<% if (slots.length === 0) { %>
+    <!-- Jamie hasn't added availability for this day at all -->
     <div style="margin-bottom: 20px;">
-        <% if (slots.length > 0) { %>
-            <!-- Jamie is working, but every slot is booked -->
-            <p style="color: var(--text-muted); margin-bottom: 12px;">This day is fully booked.</p>
-            <a href="#openModal" class="btn btn-secondary time-pill" data-timeslot="Queue" data-label="Waitlist for <%= dateLabel %>">Join Waitlist</a>
-        <% } else { %>
-            <!-- Jamie hasn't added availability for this day at all -->
-            <p style="color: var(--text-muted); margin-bottom: 12px;">No availability set for this day.</p>
+        <p style="color: var(--text-muted); margin-bottom: 12px;">No availability set for this day.</p>
+        <% if (nextAvailable) { %>
+            <a href="/calendar?date=<%= nextAvailable %>" class="btn-next-available" data-date="<%= nextAvailable %>" data-month="<%= nextAvailableMonth %>" data-year="<%= nextAvailableYear %>">Go to next available</a>
         <% } %>
     </div>
-    <% if (nextAvailable) { %>
-        <a href="/calendar?date=<%= nextAvailable %>" class="btn-next-available" data-date="<%= nextAvailable %>" data-month="<%= nextAvailableMonth %>" data-year="<%= nextAvailableYear %>">Go to next available</a>
-    <% } %>
 <% } else { %>
+    
+    <!-- Show a warning if the day is completely full -->
+    <% if (!hasOpenSlot) { %>
+        <div style="margin-bottom: 20px;">
+            <p style="color: var(--text-muted); margin-bottom: 12px;">This day is fully booked. Click a time below to join the waitlist.</p>
+        </div>
+    <% } %>
+
+    <!-- ALWAYS render the time grid if slots exist -->
     <% ['morning', 'afternoon', 'evening'].forEach(function(bucket) { %>
         <% var bucketSlots = slots.filter(function(s) { return s.bucket === bucket; }); %>
         <% if (bucketSlots.length > 0) { %>
@@ -30,9 +33,9 @@
                     <% bucketSlots.forEach(function(slot) { %>
                         <% if (slot.booked) { %>
                             <a href="#openModal" class="time-pill booked" data-timeslot="<%= slot.value %>" data-label="<%= slot.label %>">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-    <%= slot.label %>
-</a>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <%= slot.label %>
+                            </a>
                         <% } else { %>
                             <a href="#openModal" class="time-pill" data-timeslot="<%= slot.value %>" data-label="<%= slot.label %>"><%= slot.label %></a>
                         <% } %>
@@ -41,4 +44,11 @@
             </div>
         <% } %>
     <% }) %>
+
+    <!-- Add the 'Next Available' button at the bottom if the day is full -->
+    <% if (!hasOpenSlot && nextAvailable) { %>
+        <div style="margin-top: 24px;">
+            <a href="/calendar?date=<%= nextAvailable %>" class="btn-next-available" data-date="<%= nextAvailable %>" data-month="<%= nextAvailableMonth %>" data-year="<%= nextAvailableYear %>">Go to next available</a>
+        </div>
+    <% } %>
 <% } %>

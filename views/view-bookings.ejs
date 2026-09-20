@@ -20,18 +20,70 @@
                     <th>Mobile</th>
                     <th>Date</th>
                     <th>Timeslot</th>
+                    <th>Status</th>
                     <th>Options</th>
                 </tr>
                 <% rows.forEach(function(row) { %>
+                    <% 
+                        var isQueued = row.timeslot.startsWith('Queue'); 
+                        var displaySlot = isQueued ? row.timeslot.replace('Queue ', '') : row.timeslot; 
+                        
+                        // Time comparison logic (using Melbourne time)
+                        var now = new Date(new Date().toLocaleString("en-US", {timeZone: "Australia/Melbourne"}));
+                        var today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                        var isCompleted = false;
+
+                        // If the date is in the past, it's completed
+                        if (row.date < today) {
+                            isCompleted = true;
+                        } 
+                        // If it's today, check if the end time has passed
+                        else if (row.date === today && displaySlot.includes(' - ')) {
+                            var endStr = displaySlot.split(' - ')[1]; // e.g., "09:30AM"
+                            var endHour = parseInt(endStr.substring(0, 2), 10);
+                            var endMin = parseInt(endStr.substring(3, 5), 10);
+                            
+                            // Convert to 24-hour time for comparison
+                            if (endStr.toUpperCase().includes('PM') && endHour !== 12) endHour += 12;
+                            if (endStr.toUpperCase().includes('AM') && endHour === 12) endHour = 0;
+                            
+                            if (now.getHours() > endHour || (now.getHours() === endHour && now.getMinutes() >= endMin)) {
+                                isCompleted = true;
+                            }
+                        }
+                    %>
+                    
                     <tr>
                         <td><%= row.id %></td>
                         <td><%= row.name %></td>
                         <td><%= row.email %></td>
                         <td><%= row.mobile %></td>
                         <td><%= row.date %></td>
-                        <td><%= row.timeslot %></td>
+                        <td><%= displaySlot %></td>
                         <td>
-                            <div class="row-actions">
+                            <% if (isCompleted && !isQueued) { %>
+                                <span style="color: var(--text-muted); font-weight: 600;">Completed</span>
+                            <% } else if (isCompleted && isQueued) { %>
+                                <span style="color: var(--text-muted); font-weight: 600;">Expired</span>
+                            <% } else if (isQueued) { %>
+                                <span style="color: var(--danger); font-weight: 600;">Queued</span>
+                            <% } else { %>
+                                <span style="color: var(--success); font-weight: 600;">Confirmed</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <div class="row-actions" style="display: flex; gap: 8px;">
+                                <% if (isQueued && !isCompleted) { %>
+                                    <!-- Only show Confirm button if they are queued AND the time hasn't passed -->
+                                    <form action="/confirm-booking" method="post">
+                                        <input type="hidden" name="id" value="<%= row.id %>">
+                                        <input type="hidden" name="timeslot" value="<%= displaySlot %>">
+                                        <input type="hidden" name="email" value="<%= row.email %>">
+                                        <input type="hidden" name="name" value="<%= row.name %>">
+                                        <input type="hidden" name="date" value="<%= row.date %>">
+                                        <button type="submit" style="color: var(--success); border-color: var(--success);">Confirm & Email</button>
+                                    </form>
+                                <% } %>
                                 <form action="/delete-booking" method="post">
                                     <input type="hidden" name="id" value="<%= row.id %>">
                                     <button type="submit">Delete</button>
