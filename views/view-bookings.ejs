@@ -7,7 +7,12 @@
 <body>
     <%- include('partials/topbar') %>
     <div class="admin-shell wide">
-        <h1>Bookings</h1>
+        <div class="admin-heading">
+            <h1>Bookings</h1>
+            <form action="/booking-settings" method="get">
+                <button class="btn btn-secondary" type="submit">Back to admin settings</button>
+            </form>
+        </div>
         <% if (rows.length === 0) { %>
             <p style="color: var(--text-muted);">No bookings found.</p>
         <% } else { %>

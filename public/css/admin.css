@@ -15,6 +15,23 @@ body {
   margin-bottom: 24px;
 }
 
+.admin-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-heading h1 {
+  margin: 0;
+}
+
+.admin-heading .btn {
+  flex-shrink: 0;
+}
+
 .admin-shell.wide {
   max-width: 860px;
 }
@@ -64,6 +81,30 @@ body {
 
 .row-actions button:hover {
   border-color: var(--accent);
+}
+
+.row-actions form:last-child button {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.row-actions form:last-child button:hover {
+  background: var(--danger);
+  color: var(--danger-contrast);
+}
+
+.review-text-cell {
+  min-width: 260px;
+  white-space: pre-wrap;
+}
+
+.status-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  color: var(--danger);
 }
 
 .row-actions form[action="delete.php"] button,

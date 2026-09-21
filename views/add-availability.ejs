@@ -7,7 +7,12 @@
 <body>
     <%- include('partials/topbar') %>
     <div class="admin-shell">
-        <h1>Adjust booking times</h1>
+        <div class="admin-heading">
+            <h1>Adjust booking times</h1>
+            <form action="/booking-settings" method="get">
+                <button class="btn btn-secondary" type="submit">Back to admin settings</button>
+            </form>
+        </div>
         <% if (msg) { %>
             <div class="<%= msg.startsWith('ERROR') ? 'msg-error' : 'msg-success' %>"><%= msg %></div>
         <% } %>

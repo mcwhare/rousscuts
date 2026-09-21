@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'Edit review' }) %>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <%- include('partials/topbar') %>
+    <div class="admin-shell">
+        <h1>Edit review</h1>
+        <div class="panel">
+            <form action="/edit-review" method="post">
+                <input type="hidden" name="id" value="<%= review.id %>">
+                <div class="field">
+                    <label for="name">Customer name</label>
+                    <input type="text" id="name" name="name" value="<%= review.name %>" required>
+                </div>
+                <div class="field">
+                    <label for="rating">Rating</label>
+                    <select id="rating" name="rating" required>
+                        <% for (let rating = 1; rating <= 5; rating++) { %>
+                            <option value="<%= rating %>" <%= review.rating === rating ? 'selected' : '' %>><%= rating %>/5</option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="review_text">Review</label>
+                    <textarea id="review_text" name="review_text" rows="6" required><%= review.review_text %></textarea>
+                </div>
+                <div class="field">
+                    <label for="approved">Visibility</label>
+                    <select id="approved" name="approved">
+                        <option value="1" <%= review.approved ? 'selected' : '' %>>Published</option>
+                        <option value="0" <%= review.approved ? '' : 'selected' %>>Hidden</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Save changes</button>
+            </form>
+        </div>
+        <form action="/reviews" method="get">
+            <button class="btn btn-secondary" type="submit" style="margin-top: 20px;">Back to reviews</button>
+        </form>
+    </div>
+    <%- include('partials/scripts') %>
+</body>
+</html>

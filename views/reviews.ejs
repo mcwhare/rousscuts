@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('partials/head', { title: 'Edit availability' }) %>
+    <%- include('partials/head', { title: 'Manage reviews' }) %>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
     <%- include('partials/topbar') %>
     <div class="admin-shell wide">
         <div class="admin-heading">
-            <h1>Edit availability</h1>
+            <h1>Manage reviews</h1>
             <form action="/booking-settings" method="get">
                 <button class="btn btn-secondary" type="submit">Back to admin settings</button>
             </form>
         </div>
         <table class="data-table">
-            <caption>Available times</caption>
+            <caption>Customer reviews</caption>
             <tr>
-                <th>Date</th>
-                <th>Time available</th>
-                <th>Duration</th>
+                <th>Customer</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th>Status</th>
                 <th>Options</th>
             </tr>
             <% if (rows.length === 0) { %>
-                <tr><td colspan="4" style="color: var(--text-muted);">No availability set yet.</td></tr>
+                <tr><td colspan="5" style="color: var(--text-muted);">No reviews yet.</td></tr>
             <% } %>
             <% rows.forEach(function(row) { %>
                 <tr>
-                    <td><%= row.date %></td>
-                    <td><%= row.duration %> min</td>
-                    <td><%= row.timeStart %> - <%= row.timeEnd %></td>
+                    <td><%= row.name %></td>
+                    <td><%= row.rating %>/5</td>
+                    <td class="review-text-cell"><%= row.review_text %></td>
+                    <td>
+                        <% if (row.approved) { %>
+                            <span class="status-badge">Published</span>
+                        <% } else { %>
+                            <span class="status-badge pending">Hidden</span>
+                        <% } %>
+                    </td>
                     <td>
                         <div class="row-actions">
-                            <form action="/edit" method="get">
-                                <input type="hidden" name="date" value="<%= row.date %>">
+                            <form action="/edit-review" method="get">
+                                <input type="hidden" name="id" value="<%= row.id %>">
                                 <button type="submit">Edit</button>
                             </form>
-                            <form action="/delete-availability" method="post">
-                                <input type="hidden" name="date" value="<%= row.date %>">
+                            <form action="/delete-review" method="post" onsubmit="return confirm('Delete this review?');">
+                                <input type="hidden" name="id" value="<%= row.id %>">
                                 <button type="submit">Delete</button>
                             </form>
                         </div>

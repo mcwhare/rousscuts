@@ -51,6 +51,65 @@ router.get('/booking-settings', requireAuth, (req, res) => {
   res.render('booking-settings');
 });
 
+// ---------- reviews ----------
+
+router.get('/reviews', requireAuth, async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, name, rating, review_text, created_at, approved FROM reviews ORDER BY created_at DESC',
+    );
+    res.render('reviews', { rows });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/edit-review', requireAuth, async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, name, rating, review_text, approved FROM reviews WHERE id = ?',
+      [req.query.id],
+    );
+    if (rows.length === 0) {
+      return res.status(404).render('status', { message: 'Review not found', redirectTo: '/reviews' });
+    }
+    res.render('edit-review', { review: rows[0] });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/edit-review', requireAuth, async (req, res, next) => {
+  try {
+    const { id, name, rating, review_text, approved } = req.body;
+    const parsedRating = parseInt(rating, 10);
+    const trimmedName = String(name || '').trim();
+    const trimmedReviewText = String(review_text || '').trim();
+
+    if (!trimmedName || !trimmedReviewText || !Number.isInteger(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+      return res.status(400).render('status', { message: 'Please provide a name, review, and rating from 1 to 5.', redirectTo: `/edit-review?id=${encodeURIComponent(id)}` });
+    }
+
+    await pool.query(
+      'UPDATE reviews SET name = ?, rating = ?, review_text = ?, approved = ? WHERE id = ?',
+      [trimmedName, parsedRating, trimmedReviewText, approved === '1' ? 1 : 0, id],
+    );
+    res.redirect('/reviews');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/delete-review', requireAuth, async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    await pool.query('DELETE FROM reviews WHERE id = ?', [id]);
+    res.render('status', { message: `Deleted review with id: ${id}`, redirectTo: '/reviews' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ---------- add availability ----------
 
 router.get('/add-availability', requireAuth, (req, res) => {
