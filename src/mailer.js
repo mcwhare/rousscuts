@@ -1,13 +1,11 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 465),
-  secure: process.env.SMTP_SECURE !== 'false',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
+  host: 'localhost', // Targets GoDaddy's internal relay directly
+  port: 25,          
+  secure: false,     
+  ignoreTLS: true    // Prevents Nodemailer from forcing an SSL handshake that crashes the relay
+  // The auth block has been completely removed to mimic PHPMailer
 });
 
 /**
@@ -15,18 +13,18 @@ const transporter = nodemailer.createTransport({
  * logs failures instead of letting one bad send take down a booking.
  */
 async function sendEmail(to, subject, html, from = process.env.SMTP_USER, fromName = '') {
-  try {
-    await transporter.sendMail({
-      from: fromName ? `"${fromName}" <${from}>` : from,
-      to,
-      subject,
-      html,
-    });
-    return true;
-  } catch (err) {
+  // We removed the 'await' here. The email will send silently in the background
+  // while the server instantly returns 'true' to finish the booking quickly.
+  transporter.sendMail({
+    from: fromName ? `"${fromName}" <${from}>` : from,
+    to,
+    subject,
+    html,
+  }).catch(err => {
     console.error(`Failed to send email to ${to}:`, err.message);
-    return false;
-  }
+  });
+  
+  return true; 
 }
 
 module.exports = { sendEmail, transporter };
