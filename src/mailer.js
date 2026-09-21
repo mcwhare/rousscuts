@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
  * Send an HTML email. Mirrors the old PHPMailer sendEmail() helper —
  * logs failures instead of letting one bad send take down a booking.
  */
-async function sendEmail(to, subject, html, from = process.env.SMTP_USER, fromName = '') {
+async function sendEmail(to, subject, html, from = 'noreply@rousscuts.com.au', fromName = '') {
   // We removed the 'await' here. The email will send silently in the background
   // while the server instantly returns 'true' to finish the booking quickly.
   transporter.sendMail({
