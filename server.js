@@ -2,6 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
