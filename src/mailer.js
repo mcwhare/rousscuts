@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: 'relay-hosting.secureserver.net', // Targets GoDaddy's internal relay directly
+  host: 'localhost', // Targets GoDaddy's internal relay directly
   port: 25,          
   secure: false,     
   ignoreTLS: true    // Prevents Nodemailer from forcing an SSL handshake that crashes the relay
