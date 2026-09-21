@@ -95,7 +95,7 @@
 /* contact / instagram footer card */
 .contact-strip {
   max-width: 960px;
-  margin: 80px clamp(20px, 6vw, 56px) 80px;
+  margin: 80px clamp(20px, 6vw, 0px) 80px;
   padding: clamp(24px, 4vw, 40px);
   background: var(--bg-alt);
   border-radius: var(--radius-lg);

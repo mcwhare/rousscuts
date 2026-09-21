@@ -8,9 +8,11 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+    "express-mysql-session": "^3.0.3",
     "express-session": "^1.18.0",
     "mysql2": "^3.11.0",
     "nodemailer": "^6.9.14"

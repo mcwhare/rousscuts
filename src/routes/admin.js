@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db');
 const requireAuth = require('../middleware/requireAuth');
 const { sendEmail } = require('../mailer');
+const bcrypt = require('bcrypt');
 
 function timeToInt(t) {
   return parseInt(String(t).replace(/:/g, ''), 10);
